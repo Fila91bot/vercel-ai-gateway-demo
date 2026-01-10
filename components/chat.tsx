@@ -6,7 +6,8 @@ import { ModelSelector } from "@/components/model-selector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SendIcon, PlusIcon } from "lucide-react";
+import { SendIcon, PlusIcon, CreditCard, LogOut } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect, useRef } from "react";
 import { DEFAULT_MODEL } from "@/lib/constants";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -35,6 +36,7 @@ function ModelSelectorHandler({
 }
 
 export function Chat({ modelId = DEFAULT_MODEL }: { modelId: string }) {
+  const router = useRouter();
   const [input, setInput] = useState("");
   const [currentModelId, setCurrentModelId] = useState(modelId);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -61,6 +63,13 @@ export function Chat({ modelId = DEFAULT_MODEL }: { modelId: string }) {
     setInput("");
   };
 
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  };
+
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       <div className="absolute top-3 left-3 md:top-4 md:left-4 z-10 flex gap-2 animate-fade-in">
@@ -73,6 +82,25 @@ export function Chat({ modelId = DEFAULT_MODEL }: { modelId: string }) {
           <PlusIcon className="h-4 w-4" />
         </Button>
         <ThemeToggle />
+      </div>
+      <div className="absolute top-3 right-3 md:top-4 md:right-4 z-10 flex gap-2 animate-fade-in">
+        <Link href="/billing">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background hover:scale-[1.02] transition-all duration-150 ease"
+          >
+            <CreditCard className="h-4 w-4" />
+          </Button>
+        </Link>
+        <Button
+          onClick={handleLogout}
+          variant="outline"
+          size="icon"
+          className="h-9 w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background hover:scale-[1.02] transition-all duration-150 ease"
+        >
+          <LogOut className="h-4 w-4" />
+        </Button>
       </div>
       {!hasMessages && (
         <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 animate-fade-in">
