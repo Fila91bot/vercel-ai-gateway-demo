@@ -1,8 +1,12 @@
 import { createOpenAI } from '@ai-sdk/openai'
 
-// Direct OpenAI connection (no gateway)
+// Cloudflare AI Gateway setup for caching and analytics
+const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID!
+const CLOUDFLARE_GATEWAY_ID = process.env.CLOUDFLARE_GATEWAY_ID!
+
 export const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
+  baseURL: `https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/openai`,
 })
 
 // Supported OpenAI Models
