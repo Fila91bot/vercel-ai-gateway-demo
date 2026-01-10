@@ -80,26 +80,35 @@ BEGIN
 END;
 $$;
 
--- 5. Automatsko kreiranje usage record-a nakon signup-a
-CREATE OR REPLACE FUNCTION handle_new_user()
+-- 5. Automatsko kreiranje user-a u ai_chat_korisnici nakon Auth signup-a
+CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
 RETURNS trigger
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
+  -- Kreiraj user u ai_chat_korisnici
+  INSERT INTO public.ai_chat_korisnici (id, email, full_name, plan)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    'FREE'
+  );
+
   -- Kreiraj usage record
-  INSERT INTO ai_chat_usage (user_id, message_count, last_reset)
+  INSERT INTO public.ai_chat_usage (user_id, message_count, last_reset)
   VALUES (NEW.id, 0, now());
 
   RETURN NEW;
 END;
 $$;
 
--- Trigger za automatsko kreiranje usage record-a
-DROP TRIGGER IF EXISTS on_user_created ON ai_chat_korisnici;
-CREATE TRIGGER on_user_created
-  AFTER INSERT ON ai_chat_korisnici
-  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+-- Trigger koji poziva function kada se kreira novi user u auth.users
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_auth_user();
 
 -- 6. Dodaj indekse za performance
 CREATE INDEX IF NOT EXISTS idx_ai_chat_korisnici_email ON ai_chat_korisnici(email);
