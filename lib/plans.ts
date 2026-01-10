@@ -85,5 +85,6 @@ export type PlanName = keyof typeof PLANS
 
 // Helper function to check if a plan allows a specific model
 export function isPlanAllowedModel(plan: PlanName, modelId: string): boolean {
-  return PLANS[plan].allowedModels.includes(modelId as any)
+  const allowedModels = PLANS[plan].allowedModels as unknown as string[]
+  return allowedModels.includes(modelId)
 }
