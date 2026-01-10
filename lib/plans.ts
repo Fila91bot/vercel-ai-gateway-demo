@@ -22,12 +22,13 @@ export const PLANS = {
       variantId: null,
     },
   },
+
   PRO: {
     name: 'Pro',
     price: 1900, // 19€ in cents
     priceDisplay: '19€',
     messageLimit: -1, // unlimited
-    allowedModels: [GPT_4, GPT_4_MINI, GPT_35], // All 3 models
+    allowedModels: [GPT_4, GPT_4_MINI, GPT_35],
     features: [
       'Unlimited poruke',
       'Sva 3 modela (GPT-4o, GPT-4o Mini, GPT-3.5 Turbo)',
@@ -36,16 +37,17 @@ export const PLANS = {
       'Early access na nove feature-e',
     ],
     lemonsqueezy: {
-      productId: 'YOUR_PRODUCT_ID_HERE', // ← Replace with actual Product ID
-      variantId: 'YOUR_VARIANT_ID_HERE', // ← Replace with actual Variant ID
+      productId: '765905',
+      variantId: '1205560',
     },
   },
+
   API: {
     name: 'API / Developer',
     price: 2900, // 29€ in cents
     priceDisplay: '29€',
-    messageLimit: -1, // unlimited
-    allowedModels: [GPT_4, GPT_4_MINI, GPT_35], // All models
+    messageLimit: -1,
+    allowedModels: [GPT_4, GPT_4_MINI, GPT_35],
     features: [
       'Sve iz PRO',
       'API ključ + unlimited API pozivi',
@@ -54,16 +56,17 @@ export const PLANS = {
       'Idealno za developere i integracije',
     ],
     lemonsqueezy: {
-      productId: 'YOUR_PRODUCT_ID_HERE', // ← Replace with actual Product ID
-      variantId: 'YOUR_VARIANT_ID_HERE', // ← Replace with actual Variant ID
+      productId: '765900',
+      variantId: '1205554',
     },
   },
+
   TEAM: {
     name: 'Team / Studio',
     price: 4900, // 49€ in cents
     priceDisplay: '49€',
-    messageLimit: -1, // unlimited
-    allowedModels: [GPT_4, GPT_4_MINI, GPT_35], // All models
+    messageLimit: -1,
+    allowedModels: [GPT_4, GPT_4_MINI, GPT_35],
     features: [
       'Sve iz API plana',
       '3 korisnika uključena',
@@ -72,8 +75,8 @@ export const PLANS = {
       'Prioritetna podrška',
     ],
     lemonsqueezy: {
-      productId: 'YOUR_PRODUCT_ID_HERE', // ← Replace with actual Product ID
-      variantId: 'YOUR_VARIANT_ID_HERE', // ← Replace with actual Variant ID
+      productId: '765906',
+      variantId: '1205563',
     },
   },
 } as const
@@ -82,5 +85,6 @@ export type PlanName = keyof typeof PLANS
 
 // Helper function to check if a plan allows a specific model
 export function isPlanAllowedModel(plan: PlanName, modelId: string): boolean {
-  return PLANS[plan].allowedModels.includes(modelId as never)
+  return PLANS[plan].allowedModels.includes(modelId)
 }
+
