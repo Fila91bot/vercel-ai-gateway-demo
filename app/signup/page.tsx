@@ -25,8 +25,8 @@ export default function SignupPage() {
     try {
       const supabase = createClient()
 
-      // Sign up the user
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      // Sign up the user (trigger will automatically create ai_chat_korisnici record)
+      const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -37,18 +37,6 @@ export default function SignupPage() {
       })
 
       if (signUpError) throw signUpError
-
-      // Create user record in ai_chat_korisnici table
-      if (data.user) {
-        const { error: insertError } = await supabase.from('ai_chat_korisnici').insert({
-          id: data.user.id,
-          email: data.user.email,
-          full_name: fullName,
-          plan: 'FREE',
-        })
-
-        if (insertError) throw insertError
-      }
 
       router.push('/')
       router.refresh()
